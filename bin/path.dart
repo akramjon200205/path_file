@@ -4,14 +4,14 @@ class Path {
   start() {
     print("Katalogni kiriting:");
     String filePath = stdin.readLineSync()!;
-    printFolders(filePath);    
+    printFolders(filePath);
   }
 
-  open(String folder) {
-    print("papka raqamini tanlang:");
-    int choice = int.parse(stdin.readLineSync()!);
-    printFolders(folder);
-  }
+  // open(String folder) {
+  //   print("papka raqamini tanlang:");
+  //   int choice = int.parse(stdin.readLineSync()!);
+  //   printFolders(folder);
+  // }
 
   void printFolders(String path) {
     final dir = Directory(path);
@@ -22,13 +22,9 @@ class Path {
 
     entities.forEach((element) {
       file.add(element);
-
       if (element is File) {
-        print("     |______");
-
         print("${i++}📄  |   ${element.toString().exchange().split("/").last}");
       } else if (element is Directory) {
-        print("     |______");
         print("${i++}📂  |   ${element.toString().exchange().split("/").last}");
       }
     });
