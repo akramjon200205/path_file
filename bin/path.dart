@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:filesize/filesize.dart';
+
 class Path {
   start() {
     print("Katalogni kiriting:");
@@ -7,27 +9,23 @@ class Path {
     printFolders(filePath);
   }
 
-  // open(String folder) {
-  //   print("papka raqamini tanlang:");
-  //   int choice = int.parse(stdin.readLineSync()!);
-  //   printFolders(folder);
-  // }
-
   void printFolders(String path) {
     final dir = Directory(path);
     final List<FileSystemEntity> entities = dir.listSync().toList();
     print(path.replaceAll("\\", "/").split("/").last);
     List<FileSystemEntity> file = [];
-    int i = 1;
 
-    entities.forEach((element) {
-      file.add(element);
-      if (element is File) {
-        print("${i++}📄  |   ${element.toString().exchange().split("/").last}");
-      } else if (element is Directory) {
-        print("${i++}📂  |   ${element.toString().exchange().split("/").last}");
+    for (var i = 0; i < entities.length; i++) {
+      var fileSize = filesize(entities[i].statSync().size);
+
+      if (entities[i] is File) {
+        print(
+            "${i++}📄  |   ${entities[i].toString().exchange().split("/").last} - ${entities[i].statSync().changed} - $fileSize");
+      } else {
+        print(
+            "${i++}📂  |   ${entities[i].toString().exchange().split("/").last} - ${entities[i].statSync().changed}");
       }
-    });
+    }
     print("Tartib raqamini kiriting(qaytish uchun '0'): ");
     String tanlovS = stdin.readLineSync()!;
 
@@ -42,7 +40,8 @@ class Path {
           printFolders(entities[tanlov - 1].toString().exchange());
         } else if (entities[tanlov - 1] is File) {
           print(entities[tanlov - 1]);
-          print("Bu tanlov katalog emas \ndavom ettirish uchun 1 ni bosing?");
+          print(
+              "Siz tanlagan raqamda  katalog mavjud emas \ndavom ettirish uchun 1 ni bosing?");
           if (int.parse(stdin.readLineSync()!) == 1) {
             printFolders(path);
           } else {
